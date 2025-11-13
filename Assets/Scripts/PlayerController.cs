@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public static PlayerController Instance;
     [Header("Reference Values")]
-    [SerializeField] private Camera mainCamera;
+    public Camera MainCamera;
     [SerializeField] private Transform recoilObj;
 
     [Header("Audio Values")]
@@ -49,6 +50,11 @@ public class PlayerController : MonoBehaviour
 
     private Vector3 _recoil = Vector3.zero;
 
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     private void Start()
     {
         _characterController = GetComponent<CharacterController>();
@@ -56,7 +62,7 @@ public class PlayerController : MonoBehaviour
         QualitySettings.vSyncCount = 0;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-        mainCamera.transform.position = new Vector3(transform.position.x, transform.position.y + _playerViewYOffset, transform.position.z);
+        MainCamera.transform.position = new Vector3(transform.position.x, transform.position.y + _playerViewYOffset, transform.position.z);
         _defaultPosY = recoilObj.localPosition.y;
     }
 
@@ -81,7 +87,7 @@ public class PlayerController : MonoBehaviour
     {
         _mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
         _mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
-        float num = ConvertAngle(mainCamera.transform.localEulerAngles.x);
+        float num = ConvertAngle(MainCamera.transform.localEulerAngles.x);
         if (num > 85f)
         {
             num = 85f;
@@ -101,7 +107,7 @@ public class PlayerController : MonoBehaviour
         ClampXAxisRotationToValue(num);
         _recoil.z = _horizontal * -2f;
         recoilObj.transform.localRotation = Quaternion.RotateTowards(recoilObj.transform.localRotation, Quaternion.Euler(_recoil), _recoilReturnSpeed * Time.deltaTime);
-        mainCamera.transform.Rotate(Vector3.left * _mouseY);
+        MainCamera.transform.Rotate(Vector3.left * _mouseY);
         transform.Rotate(Vector3.up * _mouseX);
         __xRotateVector = transform.localRotation.ToEulerAngles() * 57.29578f;
         __xRotateVector.y = Mathf.Clamp(__xRotateVector.y, 0f - xClampMin, xClampMax);
@@ -110,11 +116,11 @@ public class PlayerController : MonoBehaviour
 
     private void ClampXAxisRotationToValue(float value)
     {
-        _eulerRotation = mainCamera.transform.localEulerAngles;
+        _eulerRotation = MainCamera.transform.localEulerAngles;
         _eulerRotation.x = value;
         _eulerRotation.z = 0f;
         _eulerRotation.y = 0f;
-        mainCamera.transform.localEulerAngles = _eulerRotation;
+        MainCamera.transform.localEulerAngles = _eulerRotation;
     }
     private void HandleHeadBob()
     {
@@ -143,7 +149,7 @@ public class PlayerController : MonoBehaviour
     {
         _horizontal = Input.GetAxis("Horizontal");
         _vertical = Input.GetAxis("Vertical");
-        mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, new Vector3(transform.position.x, transform.position.y + _playerViewYOffset, transform.position.z), _duckMoveSpeed * Time.deltaTime);
+        MainCamera.transform.position = Vector3.Lerp(MainCamera.transform.position, new Vector3(transform.position.x, transform.position.y + _playerViewYOffset, transform.position.z), _duckMoveSpeed * Time.deltaTime);
         Vector3 direction = new Vector3(_horizontal, 0f, _vertical);
         Vector3 vector = transform.TransformDirection(direction) * movementSpeed;
         vector = Vector3.ClampMagnitude(vector, movementSpeed);
