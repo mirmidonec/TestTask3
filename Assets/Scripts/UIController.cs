@@ -10,6 +10,19 @@ public class UIController : MonoBehaviour
     public GameObject crosshairFill;
     public GameObject crosshair;
     public GameObject buttonsHint;
+    private float deltaTime = 0.0f;
+    public Text fpsText;
+    
+    void Update()
+    {
+        deltaTime += (Time.unscaledDeltaTime - deltaTime) * 0.1f;
+        float fps = 1.0f / deltaTime;
+        
+        if (fpsText != null)
+        {
+            fpsText.text = $"FPS: {Mathf.Round(fps)}";
+        }
+    }
 
     private void Awake()
     {
