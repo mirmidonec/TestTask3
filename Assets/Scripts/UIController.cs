@@ -22,6 +22,10 @@ public class UIController : MonoBehaviour
         {
             fpsText.text = $"FPS: {Mathf.Round(fps)}";
         }
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+        }
     }
 
     private void Awake()
