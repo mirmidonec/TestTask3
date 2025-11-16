@@ -21,7 +21,7 @@ MonoBehaviour:
     m_Value: 350
   colorPrecision:
     m_OverrideState: 1
-    m_Value: 200
+    m_Value: 500.45
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0

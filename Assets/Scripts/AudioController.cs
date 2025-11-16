@@ -7,6 +7,7 @@ public class AudioController : MonoBehaviour
     public AudioObject dropSound;
     public static AudioController Instance;
     public AudioObject grabObjectCombineSound;
+    public AudioObject ringSound;
 
     private void Awake()
     {
@@ -22,6 +23,12 @@ public class AudioController : MonoBehaviour
     public void SpawnCombineSoundAtPos(Vector3 audioPos)
     {
         AudioObject audioObject = Object.Instantiate(grabObjectCombineSound, audioPos, Quaternion.identity, null);
+        audioObject.PlayAudioOnThisObject();
+        Object.Destroy(audioObject.gameObject, 1f);
+    }
+      public void SpawnRingAtPos(Vector3 audioPos)
+    {
+        AudioObject audioObject = Object.Instantiate(ringSound, audioPos, Quaternion.identity, null);
         audioObject.PlayAudioOnThisObject();
         Object.Destroy(audioObject.gameObject, 1f);
     }
