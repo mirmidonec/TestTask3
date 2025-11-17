@@ -8,6 +8,7 @@ public class AudioController : MonoBehaviour
     public static AudioController Instance;
     public AudioObject grabObjectCombineSound;
     public AudioObject ringSound;
+    	public AudioObject dialogLetterTick;
 
     private void Awake()
     {
@@ -20,6 +21,12 @@ public class AudioController : MonoBehaviour
         audioObject.PlayAudioOnThisObject();
         Destroy(audioObject.gameObject, 1f);
     }
+    	public void SpawnDialogLetterTick()
+	{
+		AudioObject audioObject = Object.Instantiate(dialogLetterTick, base.transform.position, Quaternion.identity, null);
+		audioObject.PlayAudioOnThisObject();
+		Object.Destroy(audioObject.gameObject, 1f);
+	}
     public void SpawnCombineSoundAtPos(Vector3 audioPos)
     {
         AudioObject audioObject = Object.Instantiate(grabObjectCombineSound, audioPos, Quaternion.identity, null);

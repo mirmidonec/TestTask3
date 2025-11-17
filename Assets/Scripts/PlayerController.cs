@@ -49,6 +49,8 @@ public class PlayerController : MonoBehaviour
     private Vector3 _eulerRotation = Vector3.zero;
 
     private Vector3 _recoil = Vector3.zero;
+    private float currentFieldOfView = 60f;
+    private Coroutine focusTargetCor;
 
     private void Awake()
     {
@@ -65,7 +67,53 @@ public class PlayerController : MonoBehaviour
         MainCamera.transform.position = new Vector3(transform.position.x, transform.position.y + _playerViewYOffset, transform.position.z);
         _defaultPosY = recoilObj.localPosition.y;
     }
+    public void FocusViewOn(Transform targetFocus)
+    {
+        if (!(targetFocus == null))
+        {
+            if (focusTargetCor != null)
+            {
+                StopCoroutine(focusTargetCor);
+            }
+            focusTargetCor = StartCoroutine(focusTarget(targetFocus));
+        }
+    }
 
+    private IEnumerator focusTarget(Transform targetFocus)
+    {
+        float lerpValue = 0f;
+        float time = 0.38f;
+        Quaternion currentRotation = base.transform.rotation;
+        Quaternion endRotation = Quaternion.LookRotation(targetFocus.transform.position - base.transform.position);
+        base.transform.localEulerAngles = new Vector3(0f, base.transform.localEulerAngles.y, 0f);
+        _ = MainCamera.transform.localEulerAngles;
+        _ = Vector3.zero;
+        Quaternion currentRotQuat = MainCamera.transform.rotation;
+        Quaternion endRotationQuat = Quaternion.LookRotation(targetFocus.transform.position - MainCamera.transform.position);
+        float startFieldOfView = currentFieldOfView;
+        float endFieldOfView = 50f;
+        while (lerpValue <= time)
+        {
+            base.transform.rotation = Quaternion.Lerp(currentRotation, endRotation, lerpValue / time);
+            base.transform.localEulerAngles = new Vector3(0f, base.transform.localEulerAngles.y, 0f);
+            MainCamera.transform.rotation = Quaternion.Lerp(currentRotQuat, endRotationQuat, lerpValue / time);
+            MainCamera.transform.localEulerAngles = new Vector3(MainCamera.transform.localEulerAngles.x, 0f, 0f);
+            _mouseY = base.transform.eulerAngles.y;
+            MainCamera.fieldOfView = Mathf.Lerp(startFieldOfView, endFieldOfView, lerpValue / time);
+            currentFieldOfView = MainCamera.fieldOfView;
+            _mouseX = MainCamera.transform.eulerAngles.x;
+            lerpValue += Time.deltaTime;
+            yield return null;
+        }
+        MainCamera.fieldOfView = endFieldOfView;
+        currentFieldOfView = MainCamera.fieldOfView;
+        base.transform.rotation = endRotation;
+        base.transform.localEulerAngles = new Vector3(0f, base.transform.localEulerAngles.y, 0f);
+        MainCamera.transform.rotation = endRotationQuat;
+        MainCamera.transform.localEulerAngles = new Vector3(MainCamera.transform.localEulerAngles.x, 0f, 0f);
+        _mouseY = base.transform.eulerAngles.y;
+        _mouseX = MainCamera.transform.localEulerAngles.x;
+    }
     private void Update()
     {
 
@@ -83,6 +131,7 @@ public class PlayerController : MonoBehaviour
         }
         return angle;
     }
+    float defaultFov = 60f;
     private void HandleCameraRotation(float yClampMin = 85f, float yClampMax = 85f, float xClampMin = 181f, float xClampMax = 181f)
     {
         _mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
@@ -105,6 +154,9 @@ public class PlayerController : MonoBehaviour
             }
         }
         ClampXAxisRotationToValue(num);
+        if(!DialogController.instance.isShowingDialog){
+        MainCamera.fieldOfView = Mathf.Lerp(MainCamera.fieldOfView, defaultFov, Time.deltaTime * 20f);
+        }
         _recoil.z = _horizontal * -2f;
         recoilObj.transform.localRotation = Quaternion.RotateTowards(recoilObj.transform.localRotation, Quaternion.Euler(_recoil), _recoilReturnSpeed * Time.deltaTime);
         MainCamera.transform.Rotate(Vector3.left * _mouseY);

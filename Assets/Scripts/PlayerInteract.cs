@@ -29,6 +29,11 @@ public class PlayerInteract : MonoBehaviour
 
     private void HandleInteractions()
     {
+        if (DialogController.instance.isShowingDialog)
+        {
+            UIController.Instance.SetInteractableInfoTextActive(b: false);
+            return;
+        }
         if (Input.GetMouseButtonDown(0) && hasGrabObj())
         {
             currentGrabObj.Throw();
