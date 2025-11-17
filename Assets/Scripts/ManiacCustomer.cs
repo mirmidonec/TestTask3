@@ -34,6 +34,7 @@ public class ManiacCustomer : Customer
         CustomersController.instance.StartEvent();
         PlayerController.Instance.FocusViewOn(headRotate);
         DialogController.instance.ShowDialog(badCoffeeDialog);
+        followWithTheHead = true;
         Knife.SetActive(true);
 
         yield return new WaitForSeconds(10f);
@@ -67,13 +68,22 @@ public class ManiacCustomer : Customer
         characterAnimator.SetBool("walk", true);
     }
 
+bool isEnd = false;
     private new void Update()
     {
         base.Update();
 
-        if (rushing && navMeshAgent != null)
+        if (rushing && navMeshAgent != null && !isEnd)
         {
             navMeshAgent.SetDestination(PlayerController.Instance.transform.position);
+            if (Vector3.Distance(transform.position, PlayerController.Instance.transform.position) <= 1.5f)
+            {
+               navMeshAgent.SetDestination(transform.position);
+                characterAnimator.SetBool("walk", false);
+               CustomersController.instance.EndGame();
+               isEnd = true;
+            }
         }
     }
+
 }

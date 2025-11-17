@@ -28,6 +28,10 @@ public class DialogController : MonoBehaviour
 
         currentDialogCoroutine = StartCoroutine(ShowText(message));
     }
+    public void ShowDialogOutro(string message)
+    {   
+        currentDialogCoroutine = StartCoroutine(ShowText2(message));
+    }
 
     private IEnumerator ShowText(string text)
     {
@@ -43,9 +47,23 @@ public class DialogController : MonoBehaviour
             yield return new WaitForSeconds(letterSpeed);
         }
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(3.5f);
 
         HideDialog();
+    }
+     private IEnumerator ShowText2(string text)
+    {
+        isShowingDialog = true;
+    
+        dialogText.gameObject.SetActive(true);
+        dialogText.text = "";
+
+        foreach (char letter in text.ToCharArray())
+        {
+            AudioController.Instance.SpawnDialogLetterTick();
+            dialogText.text += letter;
+            yield return new WaitForSeconds(letterSpeed);
+        }
     }
 
     private void HideDialog()

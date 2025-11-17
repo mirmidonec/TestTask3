@@ -1,17 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CustomersController : MonoBehaviour
 {
- public static CustomersController instance;
-    
+    public static CustomersController instance;
+
     public Transform startPos;
     public Transform kioskPos;
     public Transform endPos;
-    
-    public Customer[] customerPrefabs; 
-    
+
+    public Customer[] customerPrefabs;
+
     private Customer currentCustomer;
     private int currentCustomerIndex = 0;
 
@@ -21,6 +22,9 @@ public class CustomersController : MonoBehaviour
     public AudioSource ambient;
     public AudioSource ScaryAmbient;
     public AudioSource Scream;
+    public AudioSource Scream2;
+    public AudioSource Scream3;
+    public AudioSource stab;
 
 
 
@@ -31,7 +35,7 @@ public class CustomersController : MonoBehaviour
 
     private void Start()
     {
-        SpawnCustomer();
+        Invoke("SpawnCustomer", 7f);
     }
     public void StartEvent()
     {
@@ -48,6 +52,27 @@ public class CustomersController : MonoBehaviour
         PlayerController.Instance.isCameraShaking = true;
         Scream.Play();
     }
+    public void EndGame()
+    {
+        StartCoroutine(EndGameRoutine());
+    }
+    private IEnumerator EndGameRoutine()
+    {
+        Scream.Stop();
+        Scream2.Play();
+        PlayerController.Instance.FocusViewOn(currentCustomer.headRotate);
+        yield return new WaitForSeconds(0.1f);
+        PlayerController.Instance.enabled = false;
+        UIController.Instance.FadeIns();
+        yield return new WaitForSeconds(3f);
+        stab.Play();
+        yield return new WaitForSeconds(1f);
+        Scream3.Play();
+        yield return new WaitForSeconds(3f);
+        DialogController.instance.ShowDialogOutro("Спасибо, что поиграли в мою реализацию вашего ТЗ, буду рад с вами поработать!");
+        yield return new WaitForSeconds(8f);
+        Application.Quit();
+    }
 
     public void DestroyCurrentCustomer()
     {
@@ -60,7 +85,7 @@ public class CustomersController : MonoBehaviour
     public void SpawnCustomer()
     {
         DestroyCurrentCustomer();
-        
+
         Customer customerToSpawn = customerPrefabs[currentCustomerIndex];
         currentCustomer = Instantiate(customerToSpawn, startPos.position, Quaternion.identity);
         currentCustomer.UpdateDestination(kioskPos);
@@ -69,7 +94,7 @@ public class CustomersController : MonoBehaviour
     public void NextCustomer()
     {
         currentCustomerIndex++;
-        
+
         if (currentCustomerIndex < customerPrefabs.Length)
         {
             Invoke("SpawnCustomer", 2f);

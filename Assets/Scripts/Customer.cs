@@ -105,14 +105,14 @@ public class Customer : TriggerObject
         if (tempGrabObj != null && ordered && tempGrabObj.grabObjectID == desiredItemID)
         {
             Destroy(tempGrabObj.gameObject);
+            interactableName = "";
+            canInteract = false;
             CompleteOrder();
         }
     }
 
     private void CompleteOrder()
     {
-        canInteract = false;
-        interactableName = "";
         PlayerController.Instance.FocusViewOn(headRotate);
         DialogController.instance.ShowDialog(successDialog);
 

@@ -31,6 +31,7 @@ public class PlayerInteract : MonoBehaviour
     {
         if (DialogController.instance.isShowingDialog)
         {
+            UIController.Instance.interactableInfoText.text = "";
             UIController.Instance.SetInteractableInfoTextActive(b: false);
             return;
         }
