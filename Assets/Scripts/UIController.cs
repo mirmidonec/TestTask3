@@ -13,12 +13,12 @@ public class UIController : MonoBehaviour
     private float deltaTime = 0.0f;
     public Image fadeImage;
     public Text fpsText;
-    
+
     void Update()
     {
         deltaTime += (Time.unscaledDeltaTime - deltaTime) * 0.1f;
         float fps = 1.0f / deltaTime;
-        
+
         if (fpsText != null)
         {
             fpsText.text = $"FPS: {Mathf.Round(fps)}";
@@ -77,7 +77,7 @@ public class UIController : MonoBehaviour
         buttonsHint.SetActive(b);
     }
 
-      public IEnumerator FadeIn(float duration = 1f)
+    public IEnumerator FadeIn(float duration = 1f)
     {
         float timer = 0f;
         Color startColor = fadeImage.color;

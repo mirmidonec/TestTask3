@@ -68,7 +68,7 @@ public class ManiacCustomer : Customer
         characterAnimator.SetBool("walk", true);
     }
 
-bool isEnd = false;
+    private bool isEnd = false;
     private new void Update()
     {
         base.Update();
@@ -78,10 +78,10 @@ bool isEnd = false;
             navMeshAgent.SetDestination(PlayerController.Instance.transform.position);
             if (Vector3.Distance(transform.position, PlayerController.Instance.transform.position) <= 1.5f)
             {
-               navMeshAgent.SetDestination(transform.position);
+                navMeshAgent.SetDestination(transform.position);
                 characterAnimator.SetBool("walk", false);
-               CustomersController.instance.EndGame();
-               isEnd = true;
+                CustomersController.instance.EndGame();
+                isEnd = true;
             }
         }
     }

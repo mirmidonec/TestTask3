@@ -24,7 +24,7 @@ public class CustomersController : MonoBehaviour
     public AudioSource Scream;
     public AudioSource Scream2;
     public AudioSource Scream3;
-    public AudioSource stab;
+    public AudioSource Stab;
 
 
 
@@ -65,7 +65,7 @@ public class CustomersController : MonoBehaviour
         PlayerController.Instance.enabled = false;
         UIController.Instance.FadeIns();
         yield return new WaitForSeconds(3f);
-        stab.Play();
+        Stab.Play();
         yield return new WaitForSeconds(1f);
         Scream3.Play();
         yield return new WaitForSeconds(3f);

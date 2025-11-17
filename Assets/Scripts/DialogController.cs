@@ -19,7 +19,7 @@ public class DialogController : MonoBehaviour
     }
 
     public void ShowDialog(string message)
-    {   
+    {
         UIController.Instance.SetCrosshair(b: false);
         UIController.Instance.SetCrosshairFill(b: false);
         UIController.Instance.SetInteractableInfoTextActive(b: false);
@@ -29,14 +29,14 @@ public class DialogController : MonoBehaviour
         currentDialogCoroutine = StartCoroutine(ShowText(message));
     }
     public void ShowDialogOutro(string message)
-    {   
+    {
         currentDialogCoroutine = StartCoroutine(ShowText2(message));
     }
 
     private IEnumerator ShowText(string text)
     {
         isShowingDialog = true;
-    
+
         dialogText.gameObject.SetActive(true);
         dialogText.text = "";
 
@@ -51,10 +51,10 @@ public class DialogController : MonoBehaviour
 
         HideDialog();
     }
-     private IEnumerator ShowText2(string text)
+    private IEnumerator ShowText2(string text)
     {
         isShowingDialog = true;
-    
+
         dialogText.gameObject.SetActive(true);
         dialogText.text = "";
 
