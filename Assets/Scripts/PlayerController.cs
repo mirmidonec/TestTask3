@@ -51,6 +51,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 _recoil = Vector3.zero;
     private float currentFieldOfView = 60f;
     private Coroutine focusTargetCor;
+    public bool isCameraShaking = false;
 
     private void Awake()
     {
@@ -66,6 +67,7 @@ public class PlayerController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         MainCamera.transform.position = new Vector3(transform.position.x, transform.position.y + _playerViewYOffset, transform.position.z);
         _defaultPosY = recoilObj.localPosition.y;
+        _defaultLocalPosition = recoilObj.localPosition;
     }
     public void FocusViewOn(Transform targetFocus)
     {
@@ -154,8 +156,9 @@ public class PlayerController : MonoBehaviour
             }
         }
         ClampXAxisRotationToValue(num);
-        if(!DialogController.instance.isShowingDialog){
-        MainCamera.fieldOfView = Mathf.Lerp(MainCamera.fieldOfView, defaultFov, Time.deltaTime * 20f);
+        if (!DialogController.instance.isShowingDialog)
+        {
+            MainCamera.fieldOfView = Mathf.Lerp(MainCamera.fieldOfView, defaultFov, Time.deltaTime * 20f);
         }
         _recoil.z = _horizontal * -2f;
         recoilObj.transform.localRotation = Quaternion.RotateTowards(recoilObj.transform.localRotation, Quaternion.Euler(_recoil), _recoilReturnSpeed * Time.deltaTime);
@@ -174,17 +177,42 @@ public class PlayerController : MonoBehaviour
         _eulerRotation.y = 0f;
         MainCamera.transform.localEulerAngles = _eulerRotation;
     }
+    public float shakeSpeed;
+    public float verticalShakeAmount;
+    public float horizontalShakeAmount;
+    private Vector3 _defaultLocalPosition;
+
     private void HandleHeadBob()
     {
-        if (Mathf.Abs(_characterController.velocity.x) > 0.1f || Mathf.Abs(_characterController.velocity.z) > 0.1f)
+        if (isCameraShaking)
+        {
+            _timer += Time.deltaTime * shakeSpeed;
+            float xShake = Mathf.Sin(_timer * 1.3f) * horizontalShakeAmount;
+            float yShake = Mathf.Sin(_timer * 0.7f) * verticalShakeAmount;
+
+            recoilObj.localPosition = new Vector3(
+                _defaultLocalPosition.x + xShake,
+                _defaultLocalPosition.y + yShake,
+                _defaultLocalPosition.z
+            );
+        }
+        else if (Mathf.Abs(_characterController.velocity.x) > 0.1f || Mathf.Abs(_characterController.velocity.z) > 0.1f)
         {
             _timer += Time.deltaTime * walkingBobbingSpeed;
-            recoilObj.localPosition = new Vector3(recoilObj.localPosition.x, _defaultPosY + Mathf.Sin(_timer) * bobbingAmount, recoilObj.localPosition.z);
+            recoilObj.localPosition = new Vector3(
+                recoilObj.localPosition.x,
+                _defaultLocalPosition.y + Mathf.Sin(_timer) * bobbingAmount,
+                recoilObj.localPosition.z
+            );
         }
         else
         {
             _timer = 0f;
-            recoilObj.localPosition = new Vector3(recoilObj.localPosition.x, Mathf.Lerp(recoilObj.localPosition.y, _defaultPosY, Time.deltaTime * walkingBobbingSpeed), recoilObj.localPosition.z);
+            recoilObj.localPosition = Vector3.Lerp(
+                recoilObj.localPosition,
+                _defaultLocalPosition,
+                Time.deltaTime * walkingBobbingSpeed
+            );
         }
     }
 

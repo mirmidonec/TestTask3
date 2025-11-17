@@ -15,6 +15,15 @@ public class CustomersController : MonoBehaviour
     private Customer currentCustomer;
     private int currentCustomerIndex = 0;
 
+
+    [Header("Scary event")]
+    public AudioSource rain;
+    public AudioSource ambient;
+    public AudioSource ScaryAmbient;
+    public AudioSource Scream;
+
+
+
     private void Awake()
     {
         instance = this;
@@ -23,6 +32,21 @@ public class CustomersController : MonoBehaviour
     private void Start()
     {
         SpawnCustomer();
+    }
+    public void StartEvent()
+    {
+        StartCoroutine(ScaryEvent());
+    }
+
+    private IEnumerator ScaryEvent()
+    {
+        rain.Stop();
+        ambient.Stop();
+        yield return new WaitForSeconds(0.5f);
+        ScaryAmbient.Play();
+        yield return new WaitForSeconds(9f);
+        PlayerController.Instance.isCameraShaking = true;
+        Scream.Play();
     }
 
     public void DestroyCurrentCustomer()

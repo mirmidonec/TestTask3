@@ -10,10 +10,10 @@ public class Customer : TriggerObject
     public Transform headRotate;
 
     private Transform destination;
-    private NavMeshAgent navMeshAgent;
+    protected NavMeshAgent navMeshAgent;
     private Coroutine tempCor;
     private bool ordered;
-    private bool followWithTheHead;
+    protected bool followWithTheHead;
     private float lookAtWeight = 0.5f;
 
     public int desiredItemID;
@@ -44,7 +44,7 @@ public class Customer : TriggerObject
         }
     }
 
-    private void Update()
+    protected void Update()
     {
         if (Vector3.Distance(destination.position, transform.position) < 0.2f && characterAnimator.GetBool("walk"))
         {
@@ -104,7 +104,6 @@ public class Customer : TriggerObject
 
         if (tempGrabObj != null && ordered && tempGrabObj.grabObjectID == desiredItemID)
         {
-            // Заказ выполнен!
             Destroy(tempGrabObj.gameObject);
             CompleteOrder();
         }
@@ -113,6 +112,7 @@ public class Customer : TriggerObject
     private void CompleteOrder()
     {
         canInteract = false;
+        interactableName = "";
         PlayerController.Instance.FocusViewOn(headRotate);
         DialogController.instance.ShowDialog(successDialog);
 
@@ -121,7 +121,7 @@ public class Customer : TriggerObject
         Invoke("GoAway", 2f);
     }
 
-    public void GoAway()
+    public virtual void GoAway()
     {
         canInteract = false;
         followWithTheHead = false;

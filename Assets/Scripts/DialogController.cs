@@ -56,5 +56,6 @@ public class DialogController : MonoBehaviour
         dialogText.gameObject.SetActive(false);
         isShowingDialog = false;
         UIController.Instance.SetCrosshair(b: true);
+        UIController.Instance.SetInteractableInfoTextActive(b: false);
     }
 }
