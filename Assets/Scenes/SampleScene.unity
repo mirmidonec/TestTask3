@@ -5793,7 +5793,7 @@ MonoBehaviour:
   Scream: {fileID: 384272151}
   Scream2: {fileID: 743327444}
   Scream3: {fileID: 1608918951}
-  stab: {fileID: 584951706}
+  Stab: {fileID: 584951706}
 --- !u!4 &1908739965
 Transform:
   m_ObjectHideFlags: 0

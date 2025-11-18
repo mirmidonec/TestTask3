@@ -61,7 +61,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         _characterController = GetComponent<CharacterController>();
-        Application.targetFrameRate = 300;
+        Application.targetFrameRate = 80;
         QualitySettings.vSyncCount = 0;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
